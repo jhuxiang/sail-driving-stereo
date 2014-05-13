@@ -1,6 +1,6 @@
 %{
 ========================================================
-Performs parse matching with Q50 car camera calibrations.
+Performs sparse matching with Q50 car camera calibrations.
 Authors: Tao, Pranav
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %}
@@ -18,7 +18,6 @@ T_O = eye(4);
 T_O(1:3,1:3) = R;
 T_O(1:3, 4) = R'*d;
 
-
 KKLeft = [2254.7629881361104 0.0 655.5568389543264; 0.0 2266.3053663916653 488.8502207665989; 0.0, 0.0, 1.0];
 KKLeftinv = KKLeft^(-1);
 KKRight = [2250.7203235684196 0.0 648.9587583746263; 0.0 2263.7523809342106 450.2497022795749; 0.0 0.0 1.0];
@@ -26,9 +25,12 @@ KKRightinv = KKRight^(-1);
 
 for i = 100:200 %change to start and end images
 % read images from file
-Ip_orig = imread(sprintf('/scail/group/deeplearning/driving_data/andriluka/IMAGES/driving_data_sameep/4-2-14-monterey/4-2-14-monterey-split_0_17N_a1/4-2-14-monterey-split_0_17N_a1_000%d.jpeg', i));
+%Ip_orig = imread(sprintf('/scail/group/deeplearning/driving_data/andriluka/IMAGES/driving_data_sameep/4-2-14-monterey/4-2-14-monterey-split_0_17N_a1/4-2-14-monterey-split_0_17N_a1_000%d.jpeg', i));
+Ip_orig = imread(sprintf('/local/IMAGES/driving_data_q50_data/4-2-14-monterey/4-2-14-monterey-split_0_17N_a1/4-2-14-monterey-split_0_17N_a1_000%d.jpeg', i));
+
 I1p = rgb2gray(Ip_orig);
-I1c = rgb2gray(imread(sprintf('/scail/group/deeplearning/driving_data/andriluka/IMAGES/driving_data_sameep/4-2-14-monterey/4-2-14-monterey-split_0_17N_a2/4-2-14-monterey-split_0_17N_a2_000%d.jpeg', i)));
+%I1c = rgb2gray(imread(sprintf('/scail/group/deeplearning/driving_data/andriluka/IMAGES/driving_data_sameep/4-2-14-monterey/4-2-14-monterey-split_0_17N_a2/4-2-14-monterey-split_0_17N_a2_000%d.jpeg', i)));
+I1c = rgb2gray(imread(sprintf('/local/IMAGES/driving_data_q50_data/4-2-14-monterey/4-2-14-monterey-split_0_17N_a2/4-2-14-monterey-split_0_17N_a2_000%d.jpeg', i)));
 
 % matching parameters
 param.nms_n                  = 2;   % non-max-suppression: min. distance between maxima (in pixels)
@@ -113,11 +115,15 @@ disp('Plotting ...');
   %draw the plot
   figure(1)
   hFig= figure(1);
-  subplot(2,1,1)
+  %subplot(2,1,1)
+  subplot(1, 2, 1)
+
   plot(X',Z','.');
   title({'top-down view'});
   axis([-20 20 0 100])
   axis square
-  subplot(2,1,2)
+  %subplot(2,1,2)
+  subplot(1, 2, 2)
+
   imshow(Ip_orig)
 end
